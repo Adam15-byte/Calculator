@@ -1,16 +1,26 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../../consts";
 
-const OrangeButton = ({ text }) => {
+const OrangeButton = ({ text, onPress, isSelected }) => {
   return (
-    <TouchableWithoutFeedback
-      onPress={() => console.log("orange button clicked")}
-    >
-      <View style={styles.container}>
-        <Text style={styles.textInside}>{text}</Text>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: isSelected ? COLORS.white : COLORS.orange },
+        ]}
+      >
+        <Text
+          style={[
+            styles.textInside,
+            { color: isSelected ? COLORS.orange : COLORS.white },
+          ]}
+        >
+          {text}
+        </Text>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 
@@ -26,7 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textInside: {
-    color: COLORS.white,
     fontSize: 40,
     fontWeight: "500",
   },

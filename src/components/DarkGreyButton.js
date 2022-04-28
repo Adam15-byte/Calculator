@@ -1,16 +1,14 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../../consts";
 
-const DarkGreyButton = ({ text }) => {
+const DarkGreyButton = ({ text, onPress }) => {
   return (
-    <TouchableWithoutFeedback
-      onPress={() => console.log("dark grey button clicked")}
-    >
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={styles.container}>
         <Text style={styles.textInside}>{text}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 

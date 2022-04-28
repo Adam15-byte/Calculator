@@ -1,18 +1,16 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../../consts";
 
-const LongDarkGreyButton = ({ text }) => {
+const LongDarkGreyButton = ({ text, onPress }) => {
   return (
-    <TouchableWithoutFeedback
-      onPress={() => console.log(" long dark grey button clicked")}
-    >
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.leftSideContainer}>
           <Text style={styles.textInside}>{text}</Text>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 
@@ -20,7 +18,7 @@ export default LongDarkGreyButton;
 
 const styles = StyleSheet.create({
   container: {
-    width: 173,
+    width: 172,
     height: 80,
     borderRadius: 50,
     backgroundColor: COLORS.darkgrey,

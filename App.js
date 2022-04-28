@@ -2,13 +2,16 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { COLORS, SIZES } from "./consts";
 import CalculatorScreen from "./CalculatorScreen";
+import { CalculationsContextProvider } from "./src/context/CalculationsContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 export default function App() {
   return (
-    <View style={styles.container}>
-      <CalculatorScreen />
-    </View>
+    <CalculationsContextProvider>
+      <View style={styles.container}>
+        <CalculatorScreen />
+      </View>
+    </CalculationsContextProvider>
   );
 }
 

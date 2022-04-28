@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const CalculationsContext = createContext();
 export const CalculationsContextProvider = ({ children }) => {
@@ -10,12 +10,25 @@ export const CalculationsContextProvider = ({ children }) => {
   const [result, setResult] = useState(null);
   const [currentlyFirstValue, setCurrentlyFirstValue] = useState(true);
 
+  useEffect(() => {
+    console.log("firstValue is: " + firstValue);
+  }, [firstValue]);
+  useEffect(() => {
+    console.log("secondValue is: " + secondValue);
+  }, [secondValue]);
+  useEffect(() => {
+    console.log("result is: " + result);
+  }, [result]);
+
   // handle clicking on number
   const handleNumberClick = (number) => {
     if (currentlyFirstValue === true) {
       addToFirstValue(number);
-    } else if (currentlyFirstValue === false) {
+    } else if (currentlyFirstValue === false && result === null) {
       setActionButtonJustClicked((prevState) => false);
+      addToSecondValue(number);
+    } else if (currentlyFirstValue === false && result !== null) {
+      setSecondValue("");
       addToSecondValue(number);
     }
   };
@@ -26,12 +39,15 @@ export const CalculationsContextProvider = ({ children }) => {
     } else {
       setFirstValue((prevState) => prevState + numberAsString);
     }
+    valueToShowCurrently("first");
   };
   const addToSecondValue = (number) => {
     const numberAsString = number.toString();
     setSecondValue((prevState) => prevState + numberAsString);
+    valueToShowCurrently("second");
   };
-  // handle clear
+
+  // handle AC All Clear
   const clearAll = () => {
     setFirstValue("0");
     setActionButtonSelected(null);
@@ -53,27 +69,48 @@ export const CalculationsContextProvider = ({ children }) => {
     const firstValueToInt = parseFloat(firstValue);
     const secondValueToInt = parseFloat(secondValue);
     if (firstValue === "0" || secondValue === null) return;
-    if (actionButtonSelected === "+") {
-      setResult(firstValueToInt + secondValueToInt);
-    }
 
-    if (actionButtonSelected === "-") {
-      setResult(firstValueToInt - secondValueToInt);
+    //Repeat the calculation with previous value if result is already present
+    if (result !== null) {
+      if (actionButtonSelected === "+") {
+        setResult(result + secondValueToInt);
+      }
+
+      if (actionButtonSelected === "-") {
+        setResult(result - secondValueToInt);
+      }
+      if (actionButtonSelected === "×") {
+        setResult(result * secondValueToInt);
+      }
+      if (actionButtonSelected === "÷") {
+        setResult(result / secondValueToInt);
+      }
+      //IF there is no "result" currently, perform the operation on first and second value states.
+    } else if (result === null) {
+      if (actionButtonSelected === "+") {
+        setResult(firstValueToInt + secondValueToInt);
+      }
+      if (actionButtonSelected === "-") {
+        setResult(firstValueToInt - secondValueToInt);
+      }
+      if (actionButtonSelected === "×") {
+        setResult(firstValueToInt * secondValueToInt);
+      }
+      if (actionButtonSelected === "÷") {
+        setResult(firstValueToInt / secondValueToInt);
+      }
     }
-    if (actionButtonSelected === "×") {
-      setResult(firstValueToInt * secondValueToInt);
-    }
-    if (actionButtonSelected === "÷") {
-      setResult(firstValueToInt / secondValueToInt);
-    }
+    valueToShowCurrently("result");
   };
   const valueToShowCurrently = () => {
     if (secondValue !== "" && result === null) return secondValue;
     if (secondValue === "" && result === null) return firstValue;
+
     if (result !== null) return result;
   };
+  // Handle calculating percentages of the currently displayed value
   const calculatePercentage = () => {
-    let currentValue = valueToShowCurrently();
+    const currentValue = valueToShowCurrently();
     if (currentValue === firstValue) {
       setFirstValue((prevState) => currentValue * 0.01);
     }
@@ -84,6 +121,33 @@ export const CalculationsContextProvider = ({ children }) => {
       setResult((prevState) => currentValue * 0.01);
     }
   };
+
+  // Handle changing the + - signs
+  const changeSignOfCurrentValue = () => {
+    const currentValue = valueToShowCurrently();
+    if (currentValue === firstValue) {
+      if (currentValue.charAt(0) !== "-") {
+        setFirstValue((prevState) => "-" + prevState);
+      } else if (currentValue.charAt(0) === "-") {
+        setFirstValue((prevState) => prevState.replace("-", ""));
+      }
+    }
+    if (currentValue === secondValue) {
+      if (currentValue.charAt(0) !== "-") {
+        setSecondValue((prevState) => "-" + prevState);
+      } else if (currentValue.charAt(0) === "-") {
+        setSecondValue((prevState) => prevState.replace("-", ""));
+      }
+    }
+    if (currentValue === result) {
+      if (currentValue.charAt(0) !== "-") {
+        setResult((prevState) => "-" + prevState);
+      } else if (currentValue.charAt(0) === "-") {
+        setResult((prevState) => prevState.replace("-", ""));
+      }
+    }
+  };
+
   return (
     <CalculationsContext.Provider
       value={{
@@ -98,9 +162,10 @@ export const CalculationsContextProvider = ({ children }) => {
         handleNumberClick,
         getResult,
         calculatePercentage,
+        changeSignOfCurrentValue,
       }}
     >
       {children}
     </CalculationsContext.Provider>
   );
-};
+};;;;;;;;;;;;

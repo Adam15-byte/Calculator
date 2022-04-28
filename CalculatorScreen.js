@@ -19,6 +19,7 @@ const CalculatorScreen = () => {
     handleNumberClick,
     getResult,
     calculatePercentage,
+    changeSignOfCurrentValue,
   } = useContext(CalculationsContext);
   // Check to see if the passed sign is the one currently held in the actionButtonSelected State, important to highlight the button with chosen equation
   const isThisEquationChosen = (check) => {
@@ -36,7 +37,7 @@ const CalculatorScreen = () => {
       {/* First row */}
       <View style={styles.row}>
         <GreyButton text="AC" onPress={() => clearAll()} />
-        <GreyButton text="±" />
+        <GreyButton text="±" onPress={() => changeSignOfCurrentValue()} />
         <GreyButton text="%" onPress={() => calculatePercentage()} />
         <OrangeButton
           text="÷"

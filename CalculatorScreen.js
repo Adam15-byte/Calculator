@@ -10,14 +10,14 @@ import { CalculationsContext } from "./src/context/CalculationsContext";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const CalculatorScreen = () => {
   const {
-    firstValue,
     actionButtonSelected,
     actionButtonJustClicked,
-    secondValue,
     result,
-    addToFirstValue,
     clearAll,
     setupActionButton,
+    valueToShowCurrently,
+    handleNumberClick,
+    getResult,
   } = useContext(CalculationsContext);
   // Check to see if the passed sign is the one currently held in the actionButtonSelected State, important to highlight the button with chosen equation
   const isThisEquationChosen = (check) => {
@@ -30,7 +30,7 @@ const CalculatorScreen = () => {
   return (
     <View style={styles.displayContainer}>
       <Text style={styles.inputTextStyle} numberOfLines={1}>
-        {firstValue}
+        {valueToShowCurrently()}
       </Text>
       {/* First row */}
       <View style={styles.row}>
@@ -51,9 +51,9 @@ const CalculatorScreen = () => {
         />
       </View>
       <View style={styles.row}>
-        <DarkGreyButton text="7" onPress={() => addToFirstValue(7)} />
-        <DarkGreyButton text="8" onPress={() => addToFirstValue(8)} />
-        <DarkGreyButton text="9" onPress={() => addToFirstValue(9)} />
+        <DarkGreyButton text="7" onPress={() => handleNumberClick(7)} />
+        <DarkGreyButton text="8" onPress={() => handleNumberClick(8)} />
+        <DarkGreyButton text="9" onPress={() => handleNumberClick(9)} />
         <OrangeButton
           text="×"
           onPress={() => setupActionButton("×")}
@@ -68,9 +68,9 @@ const CalculatorScreen = () => {
         />
       </View>
       <View style={styles.row}>
-        <DarkGreyButton text="4" onPress={() => addToFirstValue(4)} />
-        <DarkGreyButton text="5" onPress={() => addToFirstValue(5)} />
-        <DarkGreyButton text="6" onPress={() => addToFirstValue(6)} />
+        <DarkGreyButton text="4" onPress={() => handleNumberClick(4)} />
+        <DarkGreyButton text="5" onPress={() => handleNumberClick(5)} />
+        <DarkGreyButton text="6" onPress={() => handleNumberClick(6)} />
         <OrangeButton
           text="-"
           onPress={() => setupActionButton("-")}
@@ -85,9 +85,9 @@ const CalculatorScreen = () => {
         />
       </View>
       <View style={styles.row}>
-        <DarkGreyButton text="1" onPress={() => addToFirstValue(1)} />
-        <DarkGreyButton text="2" onPress={() => addToFirstValue(2)} />
-        <DarkGreyButton text="3" onPress={() => addToFirstValue(3)} />
+        <DarkGreyButton text="1" onPress={() => handleNumberClick(1)} />
+        <DarkGreyButton text="2" onPress={() => handleNumberClick(2)} />
+        <DarkGreyButton text="3" onPress={() => handleNumberClick(3)} />
         <OrangeButton
           text="+"
           onPress={() => setupActionButton("+")}
@@ -102,9 +102,9 @@ const CalculatorScreen = () => {
         />
       </View>
       <View style={styles.row}>
-        <LongDarkGreyButton text="0" onPress={() => addToFirstValue(0)} />
-        <DarkGreyButton text="," onPress={() => addToFirstValue(".")} />
-        <OrangeButton text="=" />
+        <LongDarkGreyButton text="0" onPress={() => handleNumberClick(0)} />
+        <DarkGreyButton text="," onPress={() => handleNumberClick(".")} />
+        <OrangeButton text="=" onPress={() => getResult()} />
       </View>
     </View>
   );

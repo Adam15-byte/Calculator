@@ -72,6 +72,18 @@ export const CalculationsContextProvider = ({ children }) => {
     if (secondValue === "" && result === null) return firstValue;
     if (result !== null) return result;
   };
+  const calculatePercentage = () => {
+    let currentValue = valueToShowCurrently();
+    if (currentValue === firstValue) {
+      setFirstValue((prevState) => currentValue * 0.01);
+    }
+    if (currentValue === secondValue) {
+      setSecondValue((prevState) => currentValue * 0.01);
+    }
+    if (currentValue === result) {
+      setResult((prevState) => currentValue * 0.01);
+    }
+  };
   return (
     <CalculationsContext.Provider
       value={{
@@ -85,9 +97,10 @@ export const CalculationsContextProvider = ({ children }) => {
         valueToShowCurrently,
         handleNumberClick,
         getResult,
+        calculatePercentage,
       }}
     >
       {children}
     </CalculationsContext.Provider>
   );
-};;;;;;;;;
+};

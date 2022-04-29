@@ -102,7 +102,7 @@ export const CalculationsContextProvider = ({ children }) => {
     setModifySecondValue((prevState) => false);
     const firstValueToFloat = parseFloat(firstValue);
     const secondValueToFloat = parseFloat(secondValue);
-    if (firstValue === "0" || secondValue === null) return;
+    if (firstValue === "0" || secondValue === "") return;
 
     //Repeat the calculation with previous value if result is already present
     if (result !== null) {

@@ -13,8 +13,8 @@ export const CalculationsContextProvider = ({ children }) => {
 
   // Console Log the values handled
   useEffect(() => {
-    console.log("firstValue is: " + firstValue);
-  }, [firstValue]);
+    console.log("modifySecondValue is: " + modifySecondValue);
+  }, [modifySecondValue]);
   useEffect(() => {
     console.log("secondValue is: " + secondValue);
   }, [secondValue]);
@@ -35,7 +35,10 @@ export const CalculationsContextProvider = ({ children }) => {
         result !== null &&
         modifySecondValue === true
       ) {
-        if (secondValue !== "") setSecondValue("");
+        if (secondValue !== "" && actionButtonJustClicked === true) {
+          setSecondValue("");
+        }
+        setActionButtonJustClicked((prevState) => false);
         addToSecondValue(number);
       }
     },
@@ -68,6 +71,7 @@ export const CalculationsContextProvider = ({ children }) => {
     setSecondValue("");
     setCurrentlyFirstValue(true);
     setResult(null);
+    setModifySecondValue(false);
   }, [
     firstValue,
     secondValue,
@@ -75,30 +79,23 @@ export const CalculationsContextProvider = ({ children }) => {
     actionButtonSelected,
     currentlyFirstValue,
     result,
+    modifySecondValue,
   ]);
 
   // handle clicking on action buttons
-  const setupActionButton = useCallback(
-    (sign) => {
-      if (result === null) {
-        setActionButtonSelected((prevState) => sign);
-        setCurrentlyFirstValue((prevState) => false);
-        setActionButtonJustClicked((prevState) => true);
-      }
-      if (result !== null) {
-        setActionButtonSelected((prevState) => sign);
-        // set ModifySecondValue to Allow modification of second value, after the initiall result got obtained
-        setModifySecondValue((prevState) => true);
-        setActionButtonJustClicked((prevState) => true);
-      }
-    },
-    [
-      actionButtonJustClicked,
-      actionButtonSelected,
-      currentlyFirstValue,
-      modifySecondValue,
-    ]
-  );
+  const setupActionButton = (sign) => {
+    if (result === null) {
+      setActionButtonSelected((prevState) => sign);
+      setCurrentlyFirstValue((prevState) => false);
+      setActionButtonJustClicked((prevState) => true);
+    }
+    if (result !== null) {
+      // set ModifySecondValue to Allow modification of second value, after the initiall result got obtained
+      setModifySecondValue((prevState) => true);
+      setActionButtonSelected((prevState) => sign);
+      setActionButtonJustClicked((prevState) => true);
+    }
+  };
 
   // handle equation sign
   const getResult = () => {

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { COLORS } from "./consts";
 import GreyButton from "./src/components/GreyButton";
 import OrangeButton from "./src/components/OrangeButton";
@@ -22,13 +22,16 @@ const CalculatorScreen = () => {
     changeSignOfCurrentValue,
   } = useContext(CalculationsContext);
   // Check to see if the passed sign is the one currently held in the actionButtonSelected State, important to highlight the button with chosen equation
-  const isThisEquationChosen = (check) => {
-    if (actionButtonSelected === check) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const isThisEquationChosen = useCallback(
+    (check) => {
+      if (actionButtonSelected === check) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [actionButtonSelected]
+  );
   return (
     <View style={styles.displayContainer}>
       <Text style={styles.inputTextStyle} numberOfLines={1}>
@@ -117,8 +120,8 @@ export default CalculatorScreen;
 const styles = StyleSheet.create({
   displayContainer: {
     flex: 1,
-    width: "90%",
-    alignItems: "flex-end",
+    width: SCREEN_WIDTH,
+    alignItems: "center",
     justifyContent: "flex-end",
     paddingBottom: 60,
   },
@@ -126,13 +129,14 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 70,
     fontWeight: "400",
-    marginHorizontal: 10,
+    alignSelf: "flex-end",
+    marginHorizontal: 35,
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
-    width: "100%",
+    width: SCREEN_WIDTH * 0.85,
     height: 100,
   },
 });

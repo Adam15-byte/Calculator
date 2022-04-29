@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 export const CalculationsContext = createContext();
 export const CalculationsContextProvider = ({ children }) => {
@@ -11,6 +11,7 @@ export const CalculationsContextProvider = ({ children }) => {
   const [currentlyFirstValue, setCurrentlyFirstValue] = useState(true);
   const [modifySecondValue, setModifySecondValue] = useState(false);
 
+  // Console Log the values handled
   useEffect(() => {
     console.log("firstValue is: " + firstValue);
   }, [firstValue]);
@@ -21,100 +22,122 @@ export const CalculationsContextProvider = ({ children }) => {
     console.log("result is: " + result);
   }, [result]);
 
-  // handle clicking on number
-  const handleNumberClick = (number) => {
-    if (currentlyFirstValue === true) {
-      addToFirstValue(number);
-    } else if (currentlyFirstValue === false && result === null) {
-      setActionButtonJustClicked((prevState) => false);
-      addToSecondValue(number);
-    } else if (
-      currentlyFirstValue === false &&
-      result !== null &&
-      modifySecondValue === true
-    ) {
-      if (secondValue !== "") setSecondValue("");
-      addToSecondValue(number);
-    }
-  };
-  const addToFirstValue = (number) => {
-    const numberAsString = number.toString();
-    if (firstValue === "0") {
-      setFirstValue((prevState) => numberAsString);
-    } else {
-      setFirstValue((prevState) => prevState + numberAsString);
-    }
-    valueToShowCurrently("first");
-  };
-  const addToSecondValue = (number) => {
-    const numberAsString = number.toString();
-    setSecondValue((prevState) => prevState + numberAsString);
-    valueToShowCurrently("second");
-  };
+  // handle clicking on number, and decide if it should be added to first or the second value
+  const handleNumberClick = useCallback(
+    (number) => {
+      if (currentlyFirstValue === true) {
+        addToFirstValue(number);
+      } else if (currentlyFirstValue === false && result === null) {
+        setActionButtonJustClicked((prevState) => false);
+        addToSecondValue(number);
+      } else if (
+        currentlyFirstValue === false &&
+        result !== null &&
+        modifySecondValue === true
+      ) {
+        if (secondValue !== "") setSecondValue("");
+        addToSecondValue(number);
+      }
+    },
+    [firstValue, secondValue, actionButtonJustClicked]
+  );
+  const addToFirstValue = useCallback(
+    (number) => {
+      const numberAsString = number.toString();
+      if (firstValue === "0") {
+        setFirstValue((prevState) => numberAsString);
+      } else {
+        setFirstValue((prevState) => prevState + numberAsString);
+      }
+    },
+    [firstValue]
+  );
+  const addToSecondValue = useCallback(
+    (number) => {
+      const numberAsString = number.toString();
+      setSecondValue((prevState) => prevState + numberAsString);
+    },
+    [secondValue]
+  );
 
   // handle AC All Clear
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setFirstValue("0");
     setActionButtonSelected(null);
     setActionButtonJustClicked(false);
     setSecondValue("");
     setCurrentlyFirstValue(true);
     setResult(null);
-  };
+  }, [
+    firstValue,
+    secondValue,
+    actionButtonJustClicked,
+    actionButtonSelected,
+    currentlyFirstValue,
+    result,
+  ]);
 
   // handle clicking on action buttons
-  const setupActionButton = (sign) => {
-    if (result === null) {
-      setActionButtonSelected((prevState) => sign);
-      setCurrentlyFirstValue((prevState) => false);
-      setActionButtonJustClicked((prevState) => true);
-    }
-    if (result !== null) {
-      setActionButtonSelected((prevState) => sign);
-      // set ModifySecondValue to Allow modification of second value, after the initiall result got obtained
-      setModifySecondValue((prevState) => true);
-      setActionButtonJustClicked((prevState) => true);
-    }
-  };
+  const setupActionButton = useCallback(
+    (sign) => {
+      if (result === null) {
+        setActionButtonSelected((prevState) => sign);
+        setCurrentlyFirstValue((prevState) => false);
+        setActionButtonJustClicked((prevState) => true);
+      }
+      if (result !== null) {
+        setActionButtonSelected((prevState) => sign);
+        // set ModifySecondValue to Allow modification of second value, after the initiall result got obtained
+        setModifySecondValue((prevState) => true);
+        setActionButtonJustClicked((prevState) => true);
+      }
+    },
+    [
+      actionButtonJustClicked,
+      actionButtonSelected,
+      currentlyFirstValue,
+      modifySecondValue,
+    ]
+  );
 
   // handle equation sign
   const getResult = () => {
     setModifySecondValue((prevState) => false);
-    const firstValueToInt = parseFloat(firstValue);
-    const secondValueToInt = parseFloat(secondValue);
+    const firstValueToFloat = parseFloat(firstValue);
+    const secondValueToFloat = parseFloat(secondValue);
     if (firstValue === "0" || secondValue === null) return;
 
     //Repeat the calculation with previous value if result is already present
     if (result !== null) {
       if (actionButtonSelected === "+") {
-        setResult(result + secondValueToInt);
+        setResult(result + secondValueToFloat);
       }
       if (actionButtonSelected === "-") {
-        setResult(result - secondValueToInt);
+        setResult(result - secondValueToFloat);
       }
       if (actionButtonSelected === "×") {
-        setResult(result * secondValueToInt);
+        setResult(result * secondValueToFloat);
       }
       if (actionButtonSelected === "÷") {
-        setResult(result / secondValueToInt);
+        setResult(result / secondValueToFloat);
       }
       //IF there is no "result" currently, perform the operation on first and second value states.
     } else if (result === null) {
       if (actionButtonSelected === "+") {
-        setResult(firstValueToInt + secondValueToInt);
+        setResult(firstValueToFloat + secondValueToFloat);
       }
       if (actionButtonSelected === "-") {
-        setResult(firstValueToInt - secondValueToInt);
+        setResult(firstValueToFloat - secondValueToFloat);
       }
       if (actionButtonSelected === "×") {
-        setResult(firstValueToInt * secondValueToInt);
+        setResult(firstValueToFloat * secondValueToFloat);
       }
       if (actionButtonSelected === "÷") {
-        setResult(firstValueToInt / secondValueToInt);
+        setResult(firstValueToFloat / secondValueToFloat);
       }
     }
-    valueToShowCurrently("result");
   };
+
   const valueToShowCurrently = () => {
     if (secondValue !== "" && result === null) return secondValue;
     if (secondValue === "" && result === null) return firstValue;
@@ -122,7 +145,7 @@ export const CalculationsContextProvider = ({ children }) => {
     if (result !== null && modifySecondValue === true) return secondValue;
   };
   // Handle calculating percentages of the currently displayed value
-  const calculatePercentage = () => {
+  const calculatePercentage = useCallback(() => {
     const currentValue = valueToShowCurrently();
     if (currentValue === firstValue) {
       setFirstValue((prevState) => currentValue * 0.01);
@@ -133,10 +156,10 @@ export const CalculationsContextProvider = ({ children }) => {
     if (currentValue === result) {
       setResult((prevState) => currentValue * 0.01);
     }
-  };
+  }, [firstValue, secondValue, result]);
 
   // Handle changing the + - signs
-  const changeSignOfCurrentValue = () => {
+  const changeSignOfCurrentValue = useCallback(() => {
     const currentValue = valueToShowCurrently();
     if (currentValue === firstValue) {
       if (currentValue.charAt(0) !== "-") {
@@ -153,13 +176,9 @@ export const CalculationsContextProvider = ({ children }) => {
       }
     }
     if (currentValue === result) {
-      if (currentValue.charAt(0) !== "-") {
-        setResult((prevState) => "-" + prevState);
-      } else if (currentValue.charAt(0) === "-") {
-        setResult((prevState) => prevState.replace("-", ""));
-      }
+      setResult((prevState) => prevState * -1);
     }
-  };
+  }, [firstValue, secondValue, result]);
 
   return (
     <CalculationsContext.Provider

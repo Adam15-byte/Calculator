@@ -145,10 +145,10 @@ export const CalculationsContextProvider = ({ children }) => {
   const calculatePercentage = useCallback(() => {
     const currentValue = valueToShowCurrently();
     if (currentValue === firstValue) {
-      setFirstValue((prevState) => currentValue * 0.01);
+      setFirstValue((prevState) => (currentValue * 0.01).toString());
     }
     if (currentValue === secondValue) {
-      setSecondValue((prevState) => currentValue * 0.01);
+      setSecondValue((prevState) => (currentValue * 0.01).toString());
     }
     if (currentValue === result) {
       setResult((prevState) => currentValue * 0.01);

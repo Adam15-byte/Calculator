@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React, { useContext, useCallback } from "react";
 import { COLORS } from "./consts";
 import GreyButton from "./src/components/GreyButton";
-import OrangeButton from "./src/components/OrangeButton";
+import PurpleButton from "./src/components/PurpleButton";
 import DarkGreyButton from "./src/components/DarkGreyButton";
 import LongDarkGreyButton from "./src/components/LongDarkGreyButton";
 import { CalculationsContext } from "./src/context/CalculationsContext";
@@ -42,7 +42,7 @@ const CalculatorScreen = () => {
         <GreyButton text="AC" onPress={() => clearAll()} />
         <GreyButton text="±" onPress={() => changeSignOfCurrentValue()} />
         <GreyButton text="%" onPress={() => calculatePercentage()} />
-        <OrangeButton
+        <PurpleButton
           text="÷"
           onPress={() => setupActionButton("÷")}
           // A check to see if the button to choose equation has just been presed. If so, check if it is this button.
@@ -59,7 +59,7 @@ const CalculatorScreen = () => {
         <DarkGreyButton text="7" onPress={() => handleNumberClick(7)} />
         <DarkGreyButton text="8" onPress={() => handleNumberClick(8)} />
         <DarkGreyButton text="9" onPress={() => handleNumberClick(9)} />
-        <OrangeButton
+        <PurpleButton
           text="×"
           onPress={() => setupActionButton("×")}
           // A check to see if the button to choose equation has just been presed. If so, check if it is this button.
@@ -76,7 +76,7 @@ const CalculatorScreen = () => {
         <DarkGreyButton text="4" onPress={() => handleNumberClick(4)} />
         <DarkGreyButton text="5" onPress={() => handleNumberClick(5)} />
         <DarkGreyButton text="6" onPress={() => handleNumberClick(6)} />
-        <OrangeButton
+        <PurpleButton
           text="-"
           onPress={() => setupActionButton("-")}
           // A check to see if the button to choose equation has just been presed. If so, check if it is this button.
@@ -93,7 +93,7 @@ const CalculatorScreen = () => {
         <DarkGreyButton text="1" onPress={() => handleNumberClick(1)} />
         <DarkGreyButton text="2" onPress={() => handleNumberClick(2)} />
         <DarkGreyButton text="3" onPress={() => handleNumberClick(3)} />
-        <OrangeButton
+        <PurpleButton
           text="+"
           onPress={() => setupActionButton("+")}
           // A check to see if the button to choose equation has just been presed. If so, check if it is this button.
@@ -109,7 +109,7 @@ const CalculatorScreen = () => {
       <View style={styles.row}>
         <LongDarkGreyButton text="0" onPress={() => handleNumberClick(0)} />
         <DarkGreyButton text="," onPress={() => handleNumberClick(".")} />
-        <OrangeButton text="=" onPress={() => getResult()} />
+        <PurpleButton text="=" onPress={() => getResult()} />
       </View>
     </View>
   );

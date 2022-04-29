@@ -2,19 +2,19 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../../consts";
 
-const OrangeButton = ({ text, onPress, isSelected }) => {
+const PurpleButton = ({ text, onPress, isSelected }) => {
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View
         style={[
           styles.container,
-          { backgroundColor: isSelected ? COLORS.white : COLORS.orange },
+          { backgroundColor: isSelected ? COLORS.white : COLORS.purple },
         ]}
       >
         <Text
           style={[
             styles.textInside,
-            { color: isSelected ? COLORS.orange : COLORS.white },
+            { color: isSelected ? COLORS.purple : COLORS.white },
           ]}
         >
           {text}
@@ -24,14 +24,14 @@ const OrangeButton = ({ text, onPress, isSelected }) => {
   );
 };
 
-export default OrangeButton;
+export default PurpleButton;
 
 const styles = StyleSheet.create({
   container: {
     width: 80,
     height: 80,
     borderRadius: 50,
-    backgroundColor: COLORS.orange,
+    backgroundColor: COLORS.purple,
     alignItems: "center",
     justifyContent: "center",
   },
